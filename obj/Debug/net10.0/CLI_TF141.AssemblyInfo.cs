@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CLI_TF141")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+132858d2e1788bc544204a0a609060d40561dad1")]
 [assembly: System.Reflection.AssemblyProductAttribute("CLI_TF141")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CLI_TF141")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

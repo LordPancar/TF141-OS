@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Excalibur\\source\\repos\\CLI_TF141\\CLI_TF141\\CLI_TF141.csproj",
-      "projectName": "CLI_TF141",
-      "projectPath": "C:\\Users\\Excalibur\\source\\repos\\CLI_TF141\\CLI_TF141\\CLI_TF141.csproj",
+      "projectUniqueName": "C:\\Users\\Excalibur\\source\\repos\\CLI_TF141\\CLI_TF141\\OS141.csproj",
+      "projectName": "OS141",
+      "projectPath": "C:\\Users\\Excalibur\\source\\repos\\CLI_TF141\\CLI_TF141\\OS141.csproj",
       "packagesPath": "C:\\Users\\Excalibur\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Excalibur\\source\\repos\\CLI_TF141\\CLI_TF141\\obj\\",
       "projectStyle": "PackageReference",

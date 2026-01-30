@@ -11,7 +11,7 @@ class SystemOS
 
     static void Main()
     {
-        Console.Title = "TF141 OS v1.1 (Anti-Freeze)";
+        Console.Title = "TF141 OS v1.1";
         AyarlariYukle();
 
         while (true)
