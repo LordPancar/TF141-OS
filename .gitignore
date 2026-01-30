@@ -1,0 +1,8 @@
+# Gereksiz Derleme Dosyalarý
+bin/
+obj/
+.vs/
+*.user
+
+# Kullanýcý Ayarlarý (Bunu gizli tutalým)
+config.txt
