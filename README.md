@@ -1,56 +1,61 @@
 # TF141 OS
 
-Windows yerel ağları (LAN) ve VPN (ZeroTier/Radmin) üzerinde çalışan, dosya tabanlı iletişim ve yönetim aracı.
+Windows yerel aÄŸlarÄ± (LAN) ve VPN (ZeroTier/Radmin) Ã¼zerindeki paylaÅŸÄ±mlÄ± klasÃ¶rleri yÃ¶netmek ve iletiÅŸim kurmak iÃ§in geliÅŸtirilmiÅŸ CLI (Komut SatÄ±rÄ± ArayÃ¼zÃ¼) aracÄ±dÄ±r.
 
-Bu proje, Windows Gezgini'nin ağ paylaşımlarında yarattığı gecikmeleri (timeout/lag) önlemek ve komut satırı üzerinden hızlı işlem yapmak amacıyla C# ile geliştirilmiştir.
+Bu proje, Windows Gezgini'nin aÄŸ eriÅŸiminde yarattÄ±ÄŸÄ± performans sorunlarÄ±nÄ± (donma/zaman aÅŸÄ±mÄ±) aÅŸmak ve dosya iÅŸlemlerini hÄ±zlandÄ±rmak amacÄ±yla C# ile yazÄ±lmÄ±ÅŸtÄ±r.
 
-## Özellikler
+## Ã–zellikler
 
-### 1. Sohbet Modülü (Chat)
-* **Dosya Tabanlı:** Veritabanı gerektirmez, ağdaki paylaşımlı `.txt` dosyası üzerinden çalışır.
-* **Anlık Senkronizasyon:** `FileSystemWatcher` kullanarak mesajları anında ekrana yansıtır.
-* **Log Yönetimi:** Odaya giriş yapıldığında son 15 mesajı otomatik yükler.
+### 1. Depolama YÃ¶neticisi (Storage Commander)
+* **Gezinti (Navigation):** `cd` komutu ile sunucu iÃ§indeki klasÃ¶rlerde gezilebilir (Sub-directory support).
+* **Anti-Freeze:** BaÄŸlantÄ± Ã¶ncesi ICMP (Ping) kontrolÃ¼ yapar. Sunucu kapalÄ±ysa arayÃ¼z kilitlenmez.
+* **HÄ±zlÄ± Transfer:** SÃ¼rÃ¼kle-bÄ±rak desteÄŸi ile dosya yÃ¼kleme ve indirme iÅŸlemleri yapÄ±lÄ±r.
+* **GÃ¼venlik:** KullanÄ±cÄ±nÄ±n ana dizin (Root) dÄ±ÅŸÄ±na Ã§Ä±kmasÄ±nÄ± engelleyen sÄ±nÄ±r kontrolÃ¼ bulunur.
 
-### 2. Depolama Yöneticisi (Storage)
-* **Anti-Freeze (Ping Kontrolü):** Sunucuya bağlanmadan önce ICMP paketi (Ping) gönderir. Sunucu kapalıysa arayüz donmaz, kullanıcıyı bilgilendirir.
-* **Transfer:** Komut satırına sürükle-bırak desteği ile dosya yükleme ve indirme işlemleri yapar.
-* **Uzaktan Kontrol:** Sunucudaki dosyaları listeler ve siler.
+### 2. Sohbet ModÃ¼lÃ¼ (Chat)
+* **Real-time:** `FileSystemWatcher` ile anlÄ±k mesajlaÅŸma saÄŸlar.
+* **Log:** Odaya giriÅŸ yapÄ±ldÄ±ÄŸÄ±nda geÃ§miÅŸ mesajlarÄ± otomatik yÃ¼kler.
+* **Bildirim:** Yeni mesaj geldiÄŸinde sesli uyarÄ± verir.
 
-### 3. Konfigürasyon
-* Kullanıcı adı ve IP adresi `config.txt` dosyasında saklanır.
-* Kurulum gerektirmez (Portable/Single File).
+### 3. YapÄ±landÄ±rma
+* KullanÄ±cÄ± adÄ± ve IP adresi `config.txt` dosyasÄ±nda saklanÄ±r.
+* Kurulum gerektirmez (Portable / Single File Executable).
 
 ## Kurulum
 
-1.  `Releases` kısmından güncel `.exe` dosyasını indirin.
-2.  Uygulamayı çalıştırın.
-3.  İlk açılışta Kullanıcı Adı ve Sunucu IP adresini girin.
+1.  Releases sayfasÄ±ndan son sÃ¼rÃ¼mÃ¼ (`TF141-OS.exe`) indirin.
+2.  DosyayÄ± Ã§alÄ±ÅŸtÄ±rÄ±n.
+3.  Ä°lk aÃ§Ä±lÄ±ÅŸta KullanÄ±cÄ± AdÄ± ve Hedef Sunucu IP adresini girin.
 
-## Kullanım Komutları
+## Komut Listesi
 
-Uygulama 3 ana menüden oluşur:
-* `[1]` Sohbet
-* `[2]` Depolama
-* `[3]` Ayarlar
+Uygulama 3 ana menÃ¼den oluÅŸur. MenÃ¼ler arasÄ± geÃ§iÅŸ iÃ§in modÃ¼lden Ã§Ä±kÄ±ÅŸ yapÄ±lmalÄ±dÄ±r.
 
-### Depolama Modülü (Storage)
+### Depolama ModÃ¼lÃ¼ (Storage)
 
-| Komut | Örnek | Açıklama |
+| Komut | KullanÄ±m | AÃ§Ä±klama |
 | :--- | :--- | :--- |
-| `ls` | `ls` | Dosyaları listeler. |
-| `upload` | `upload C:\dosya.zip` | Sunucuya dosya gönderir. |
-| `download` | `download notlar.txt` | Sunucudan masaüstüne dosya indirir. |
-| `delete` | `delete eskidosya.tmp` | Dosyayı kalıcı olarak siler. |
-| `menu` | `menu` | Ana menüye döner. |
+| `ls` | `ls` | Mevcut konumdaki dosyalarÄ± ve klasÃ¶rleri listeler. |
+| `cd` | `cd Oyunlar` | Belirtilen klasÃ¶rÃ¼n iÃ§ine girer. |
+| `cd ..` | `cd ..` | Bir Ã¼st klasÃ¶re geri dÃ¶ner. |
+| `cd` (boÅŸ) | `cd` | En baÅŸtaki ana dizine (Root) dÃ¶ner. |
+| `upload` | `upload C:\dosya.zip` | BilgisayarÄ±nÄ±zdan mevcut konuma dosya yÃ¼kler. |
+| `download` | `download notlar.txt` | Mevcut konumdaki dosyayÄ± MasaÃ¼stÃ¼ne indirir. |
+| `delete` | `delete log.txt` | DosyayÄ± kalÄ±cÄ± olarak siler. |
+| `menu` | `menu` | Ana menÃ¼ye dÃ¶ner. |
 
-### Sohbet Modülü (Chat)
+### Sohbet ModÃ¼lÃ¼ (Chat)
 
-* Mesaj göndermek için yazıp Enter'a basmak yeterlidir.
-* Çıkış yapmak için `/menu` komutu kullanılır.
+* **Mesaj GÃ¶nderme:** Metni yazÄ±p `Enter` tuÅŸuna basÄ±n.
+* **Ã‡Ä±kÄ±ÅŸ:** `/menu` komutu ile ana menÃ¼ye dÃ¶nÃ¼lÃ¼r.
 
 ## Teknik Detaylar
 
-* **Dil:** C# (.NET 10.0)
-* **Mimari:** Console Application (CLI)
-* **Bağımlılıklar:** System.Net.NetworkInformation (Ping işlemleri için)
+* **Framework:** .NET 8.0
+* **Platform:** Windows (x64)
+* **Protokol:** SMB (Dosya PaylaÅŸÄ±mÄ±)
+* **BaÄŸÄ±mlÄ±lÄ±klar:** System.Net.NetworkInformation
 
+## Lisans
+
+MIT License
