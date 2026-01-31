@@ -51,7 +51,7 @@ Uygulama 3 ana menüden oluşur. Menüler arası geçiş için modülden çıkı
 
 ## Teknik Detaylar
 
-* **Framework:** .NET 8.0
+* **Framework:** .NET 10.0
 * **Platform:** Windows (x64)
 * **Protokol:** SMB (Dosya Paylaşımı)
 * **Bağımlılıklar:** System.Net.NetworkInformation
