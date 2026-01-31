@@ -148,10 +148,12 @@ class SystemOS
     static void BaslatStorage()
     {
         Console.Clear();
-        // ÖNCE PING ATIYORUZ
         if (!SunucuAcikMi(serverIP)) return;
 
         string rootPath = $@"\\{serverIP}\tf141";
+        // YENİ: Başlangıçta mevcut yol ana yoldur.
+        string currentPath = rootPath;
+
         if (!Directory.Exists(rootPath))
         {
             HataVer("Klasöre erişilemiyor (İzinleri kontrol et).");
@@ -160,18 +162,22 @@ class SystemOS
         }
 
         RenkliYaz("--- DEPOLAMA YÖNETİCİSİ ---", ConsoleColor.Yellow);
-        Console.WriteLine("Komutlar: ls, upload, download, delete, menu");
+        Console.WriteLine("Komutlar: cd, ls, upload, download, delete, menu");
 
         bool storageAktif = true;
         while (storageAktif)
         {
+            // YENİ: Sadece klasör adını göstermek için
+            string folderName = new DirectoryInfo(currentPath).Name;
+
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($"TF141@{serverIP}> ");
+            Console.Write($"{folderName}> "); // Örn: tf141> veya Oyunlar>
             Console.ResetColor();
 
             string input = Console.ReadLine().Trim();
             string[] parts = input.Split(' ');
             string cmd = parts[0].ToLower();
+            // Argüman varsa al, yoksa boş string
             string arg = parts.Length > 1 ? input.Substring(cmd.Length + 1) : "";
 
             switch (cmd)
@@ -180,21 +186,73 @@ class SystemOS
                 case "exit":
                     storageAktif = false;
                     break;
+
+                // --- YENİ EKLENEN CD KOMUTU ---
+                case "cd":
+                    if (string.IsNullOrWhiteSpace(arg))
+                    {
+                        currentPath = rootPath; // Sadece cd yazarsa başa dön
+                    }
+                    else if (arg == "..")
+                    {
+                        // Geri gitme (Root'tan daha geriye gitmek yasak)
+                        if (currentPath.TrimEnd('\\') != rootPath.TrimEnd('\\'))
+                        {
+                            currentPath = Directory.GetParent(currentPath).FullName;
+                        }
+                        else
+                        {
+                            HataVer("Ana dizindesiniz, geri çıkılamaz.");
+                        }
+                    }
+                    else
+                    {
+                        // İleri gitme
+                        // Tırnak işaretlerini temizle (cd "Yeni Klasör" yazarsa diye)
+                        arg = arg.Replace("\"", "");
+                        string yeniYol = Path.Combine(currentPath, arg);
+
+                        if (Directory.Exists(yeniYol))
+                        {
+                            currentPath = yeniYol;
+                        }
+                        else
+                        {
+                            HataVer("Klasör bulunamadı.");
+                        }
+                    }
+                    break;
+                // -----------------------------
+
                 case "ls":
                 case "list":
                     try
                     {
-                        var files = Directory.GetFiles(rootPath);
-                        Console.WriteLine("\n--- Dosyalar ---");
+                        // DİKKAT: Artık rootPath değil currentPath kullanıyoruz
+                        var files = Directory.GetFiles(currentPath);
+                        var dirs = Directory.GetDirectories(currentPath); // Klasörleri de listeleyelim
+
+                        Console.WriteLine($"\n--- {folderName} İçeriği ---");
+
+                        // Önce Klasörleri göster (Mavi renk)
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        foreach (var d in dirs)
+                        {
+                            Console.WriteLine($"[DIR]  {new DirectoryInfo(d).Name}");
+                        }
+                        Console.ResetColor();
+
+                        // Sonra Dosyaları göster
                         foreach (var f in files)
                         {
                             FileInfo fi = new FileInfo(f);
-                            Console.WriteLine($"{fi.Name,-25} | {fi.Length / 1024} KB");
+                            Console.WriteLine($"       {fi.Name,-25} | {fi.Length / 1024} KB");
                         }
                         Console.WriteLine("");
                     }
                     catch (Exception ex) { HataVer(ex.Message); }
                     break;
+
                 case "upload":
                     arg = arg.Replace("\"", "");
                     if (File.Exists(arg))
@@ -202,15 +260,18 @@ class SystemOS
                         try
                         {
                             Console.Write("Yükleniyor... ");
-                            File.Copy(arg, Path.Combine(rootPath, Path.GetFileName(arg)), true);
+                            // Hedef artık currentPath
+                            File.Copy(arg, Path.Combine(currentPath, Path.GetFileName(arg)), true);
                             RenkliYaz("BAŞARILI", ConsoleColor.Green);
                         }
                         catch (Exception ex) { HataVer(ex.Message); }
                     }
                     else HataVer("Dosya bulunamadı.");
                     break;
+
                 case "download":
-                    string serverFile = Path.Combine(rootPath, arg);
+                    // Kaynak artık currentPath
+                    string serverFile = Path.Combine(currentPath, arg);
                     if (File.Exists(serverFile))
                     {
                         try
@@ -221,10 +282,11 @@ class SystemOS
                         }
                         catch (Exception ex) { HataVer(ex.Message); }
                     }
-                    else HataVer("Dosya sunucuda yok.");
+                    else HataVer("Dosya bu klasörde yok.");
                     break;
+
                 case "delete":
-                    string delFile = Path.Combine(rootPath, arg);
+                    string delFile = Path.Combine(currentPath, arg);
                     if (File.Exists(delFile))
                     {
                         Console.Write("Silinsin mi? (e/h): ");
@@ -236,11 +298,12 @@ class SystemOS
                     }
                     else HataVer("Dosya yok.");
                     break;
+
                 case "clear":
                     Console.Clear();
                     break;
                 default:
-                    Console.WriteLine("Bilinmeyen komut.");
+                    Console.WriteLine("Komutlar: cd, ls, upload, download, delete, menu");
                     break;
             }
         }
